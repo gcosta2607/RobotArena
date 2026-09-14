@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Robot Arena</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="hud">
+      <div class="stat"><span>PONTOS</span><b id="score">000000</b></div>
+      <div class="stat"><span>TEMPO</span><b id="time">00:00</b></div>
+      <div class="stat"><span>MULT</span><b id="mult">x1.0</b></div>
+      <div class="record"><span>RECORDE</span><b id="best">0</b></div>
+      <div class="wallet"><span>XP</span> <b id="xp">0</b><i>◆</i> <b id="coins">0</b></div>
+    </header>
+    <section class="arena-wrap">
+      <canvas id="game" width="1400" height="780" aria-label="Arena de robôs"></canvas>
+      <div id="signal" class="signal">SINAL DE ARENA ATIVO</div>
+      <div id="dash" class="dash"><em></em><span>DASH PRONTO</span></div>
+      <section id="start" class="start-screen">
+        <div class="title-block"><p>PROTOCOLO DE SOBREVIVÊNCIA // ONLINE</p><h1>ROBOT<br><strong>ARENA</strong></h1><small>ESQUIVE. RESISTA. DOMINE A ARENA.</small></div>
+        <div class="selector"><button id="previous" aria-label="Avatar anterior">‹</button><div class="robot-card"><canvas id="preview" width="160" height="185" aria-label="Prévia da unidade selecionada"></canvas><b id="unit">UNIDADE CIANO</b><small id="core">NÚCLEO VETORIAL · PADRÃO</small></div><button id="next" aria-label="Próximo avatar">›</button></div>
+        <form id="start-form" class="pilot"><label for="name">IDENTIFICAÇÃO DO PILOTO</label><input id="name" maxlength="16" value="Piloto-01" /><button>ENTRAR NA ARENA <kbd>ENTER</kbd></button><div class="profile"><span>XP <b id="menu-xp">0</b></span><span>DINHEIRO <b id="menu-coins">0</b></span><span>RECORDE <b id="menu-best">0</b></span></div><small>WASD / SETAS · SHIFT: DASH</small></form>
+      </section>
+      <section id="gameover" class="modal hidden"><p>PROTOCOLO INTERROMPIDO</p><h2>UNIDADE DESTRUÍDA</h2><div class="results"><span>PONTOS <b id="final-score">0</b></span><span>TEMPO <b id="final-time">00:00</b></span><span>XP <b id="final-xp">0</b></span></div><button id="retry">VOLTAR À ARENA <kbd>ENTER</kbd></button></section>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
