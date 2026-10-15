@@ -3,30 +3,132 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Robot Arena</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Nuggets Arena</title>
+  <link rel="stylesheet" href="style.css?v=20260929-multiplayer" />
 </head>
-<body>
+<body class="is-loading in-menu at-home">
+  <section id="loading-screen" class="loading-screen" aria-label="Carregando Nuggets Arena" role="status">
+    <div class="title-block"><h1>NUGGETS<br><strong>ARENA</strong></h1></div>
+  </section>
   <main class="app">
     <header class="hud">
       <div class="stat"><span>PONTOS</span><b id="score">000000</b></div>
       <div class="stat"><span>TEMPO</span><b id="time">00:00</b></div>
       <div class="stat"><span>MULT</span><b id="mult">x1.0</b></div>
-      <div class="record"><span>RECORDE</span><b id="best">0</b></div>
-      <div class="wallet"><span>XP</span> <b id="xp">0</b><i>◆</i> <b id="coins">0</b></div>
+      <div class="record"><span id="record-label">RECORDE</span><b id="best">0</b></div>
+      <div class="wallet"><span>XP</span> <b id="xp">0</b><i class="crystal-icon" aria-label="Cristais"></i> <b id="coins">0</b></div>
     </header>
+    <nav class="game-tools" aria-label="Controles da partida">
+      <button id="game-pause" type="button" aria-label="PAUSAR" aria-pressed="false" aria-controls="pause-notice"><svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg><svg class="resume-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7Z"/></svg></button>
+    </nav>
+    <div id="pause-notice" role="dialog" aria-labelledby="pause-title"><span id="pause-title">PARTIDA PAUSADA</span><p id="pause-multiplayer-note">A partida multiplayer continua.</p><button id="game-resume" type="button">CONTINUAR</button><button id="game-settings" class="pause-option" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 3-1 3-3 1-2 3 2 2-1 3 3 2 3-1 2 2 3-1 1-3 3-1 2-3-2-2 1-3-3-2-3 1-2-2Z"/><circle cx="12" cy="11" r="3"/></svg><span>CONFIGURAÇÕES</span></button><button id="game-menu" class="pause-option" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 5-7 7 7 7M3 12h18"/></svg><span>Voltar ao menu</span></button></div>
+    <button id="sound-toggle" class="sound-toggle" type="button" aria-label="Efeitos sonoros" aria-pressed="true" title="Desativar som">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M11 5 6 9H3v6h3l5 4V5Z"/>
+        <g class="sound-waves"><path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/></g>
+        <path class="sound-cross" d="m16 9 6 6m0-6-6 6"/>
+      </svg>
+    </button>
     <section class="arena-wrap">
       <canvas id="game" width="1400" height="780" aria-label="Arena de robôs"></canvas>
       <div id="signal" class="signal">SINAL DE ARENA ATIVO</div>
+      <span id="active-mode" class="active-mode">NORMAL</span>
       <div id="dash" class="dash"><em></em><span>DASH PRONTO</span></div>
-      <section id="start" class="start-screen">
-        <div class="title-block"><p>PROTOCOLO DE SOBREVIVÊNCIA // ONLINE</p><h1>ROBOT<br><strong>ARENA</strong></h1><small>ESQUIVE. RESISTA. DOMINE A ARENA.</small></div>
-        <div class="selector"><button id="previous" aria-label="Avatar anterior">‹</button><div class="robot-card"><canvas id="preview" width="160" height="185" aria-label="Prévia da unidade selecionada"></canvas><b id="unit">UNIDADE CIANO</b><small id="core">NÚCLEO VETORIAL · PADRÃO</small></div><button id="next" aria-label="Próximo avatar">›</button></div>
-        <form id="start-form" class="pilot"><label for="name">IDENTIFICAÇÃO DO PILOTO</label><input id="name" maxlength="16" value="Piloto-01" /><button>ENTRAR NA ARENA <kbd>ENTER</kbd></button><div class="profile"><span>XP <b id="menu-xp">0</b></span><span>DINHEIRO <b id="menu-coins">0</b></span><span>RECORDE <b id="menu-best">0</b></span></div><small>WASD / SETAS · SHIFT: DASH</small></form>
+      <section id="home" class="home-screen" aria-label="Menu principal">
+        <div class="home-content"><h1>NUGGETS <strong>ARENA</strong></h1>
+          <nav class="home-actions" aria-label="Menu principal"><button id="home-play" type="button">JOGAR <span aria-hidden="true">→</span></button><button id="home-settings" type="button">CONFIGURAÇÕES</button></nav>
+          <div class="language-picker" role="group" aria-label="Idioma">
+            <button type="button" data-language="pt-BR" aria-label="Português" title="Português" aria-pressed="true"><svg viewBox="0 0 30 20" aria-hidden="true"><path fill="#159447" d="M0 0h30v20H0z"/><path fill="#ffda44" d="m15 2 12 8-12 8L3 10z"/><circle fill="#16489b" cx="15" cy="10" r="5"/><path d="M10.3 8.8q5-1 9.5 3" fill="none" stroke="#fff" stroke-width="1"/></svg></button>
+            <button type="button" data-language="en" aria-label="English" title="English" aria-pressed="false"><svg viewBox="0 0 30 20" aria-hidden="true"><path fill="#fff" d="M0 0h30v20H0z"/><path stroke="#dc3545" stroke-width="2" d="M0 1h30M0 5h30M0 9h30M0 13h30M0 17h30"/><path fill="#234781" d="M0 0h13v11H0z"/><path fill="#fff" d="M2 2h1v1H2zM6 2h1v1H6zM10 2h1v1h-1zM4 5h1v1H4zM8 5h1v1H8zM2 8h1v1H2zM6 8h1v1H6zM10 8h1v1h-1z"/></svg></button>
+            <button type="button" data-language="es" aria-label="Español" title="Español" aria-pressed="false"><svg viewBox="0 0 30 20" aria-hidden="true"><path fill="#b72832" d="M0 0h30v20H0z"/><path fill="#ffcf40" d="M0 5h30v10H0z"/><path fill="#b72832" d="M8 8h4v5H8z"/><path stroke="#fff0b5" d="M10 8v4M8 10h4"/></svg></button>
+          </div>
+        </div>
       </section>
-      <section id="gameover" class="modal hidden"><p>PROTOCOLO INTERROMPIDO</p><h2>UNIDADE DESTRUÍDA</h2><div class="results"><span>PONTOS <b id="final-score">0</b></span><span>TEMPO <b id="final-time">00:00</b></span><span>XP <b id="final-xp">0</b></span></div><button id="retry">VOLTAR À ARENA <kbd>ENTER</kbd></button></section>
+      <section id="start" class="start-screen command-lobby" inert>
+        <header class="lobby-header">
+          <button id="home-back" class="home-back" type="button" aria-label="Voltar ao menu">‹</button><span class="lobby-brand">NUGGETS <strong>ARENA</strong></span>
+          <div class="lobby-record"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="m15 6 18 0 2 18-11 9-11-9Z" fill="#b87921" stroke="#ffdf8e" stroke-width="2"/><path d="M17 9h14v13l-7 6-7-6Z" fill="#ffd675"/><path d="M13 11H6v9l9 6m20-15h7v9l-9 6M24 32v7m-9 3h18" fill="none" stroke="#efbd62" stroke-width="3"/><path d="m24 12 2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1Z" fill="#8b571a"/></svg><div><span id="menu-record-label">RECORDE</span><b id="menu-best">0</b></div></div>
+          <div class="profile"><span class="xp-balance"><span>XP</span><b id="menu-xp">0</b></span><span class="profile-crystals" aria-label="Cristais"><span class="profile-crystal-value"><i class="crystal-icon" aria-hidden="true"></i><b id="menu-coins">0</b></span></span></div>
+        </header>
+        <nav class="hangar-tabs" aria-label="Coleção">
+          <button id="open-shop" type="button" class="hangar-tab shop-tab"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="m8 23 24-12 24 12v30H8Z" fill="#664723" stroke="#f7c87a" stroke-width="2"/><path d="M8 24h48v10H8Z" fill="#c68733"/><path d="m7 23 7-13h36l7 13-8 5-9-5-8 5-8-5-9 5Z" fill="#ffd47d" stroke="#fff0c2" stroke-width="2"/><path d="M26 39h15v14H26Z" fill="#222c3e"/><path d="M14 39h6v7h-6Z" fill="#8ef4ef"/><path d="M19 11v12m13-12v13m13-13v12" stroke="#a16b2b" stroke-width="3"/></svg><span>LOJA DE ITENS</span></button>
+          <button id="open-inventory" type="button" class="hangar-tab inventory-tab"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M25 17a7 7 0 1 1 11 6l-4 3v6" fill="none" stroke="#102d40" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="M25 16a7 7 0 1 1 11 6l-4 3v7" fill="none" stroke="#b6f9ef" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M29 30a5 5 0 0 1 6 0l22 15a4 4 0 0 1-2 8H9a4 4 0 0 1-2-8Z" fill="#20566a" stroke="#102d40" stroke-width="3" stroke-linejoin="round"/><path d="M30 31a3 3 0 0 1 4 0l21 15a2 2 0 0 1-1 4H10a2 2 0 0 1-1-4Z" fill="none" stroke="#8ce8eb" stroke-width="3" stroke-linejoin="round"/><path d="m15 44 12-8m-12 11h34" fill="none" stroke="#d1fff5" stroke-width="2" stroke-linecap="round"/></svg><span>INVENTÁRIO</span></button>
+        </nav>
+        <div class="lobby-layout">
+          <div class="pilot-station">
+            <form id="start-form" class="pilot"><label for="name">SEU NICK</label><input id="name" maxlength="16" value="Piloto-01" autocomplete="nickname" spellcheck="false" /></form>
+            <div class="selector"><div class="robot-card"><canvas id="preview" width="560" height="580" aria-label="Prévia da unidade selecionada"></canvas><b id="unit">UNIDADE CIANO</b><small id="core">NÚCLEO VETORIAL · PADRÃO</small></div></div>
+          </div>
+        </div>
+        <footer class="lobby-bottom">
+          <!-- Hidden for the school fair; remove hidden to restore multiplayer access. -->
+          <aside class="multiplayer-panel" aria-label="Multiplayer" hidden>
+            <div class="multiplayer-heading"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="m7 18 18-9 16 9v25l-17 10L7 43Z" fill="#563e83" stroke="#be9cff" stroke-width="2"/><path d="m24 16 17-9 17 9v25l-17 10-17-10Z" fill="#26374f" stroke="#c9b1ff" stroke-width="2"/><path d="M31 23h20v14H31Z" fill="#9474d6"/><path d="M35 29h4m5 0h4M13 30h6m-3-3v6" stroke="#e9e0ff" stroke-width="3"/><path d="m32 44 9 5 9-5" fill="none" stroke="#9376c0" stroke-width="2"/></svg><span>MULTIPLAYER</span></div><button id="mp-create" class="mp-button mp-primary" type="button"><svg class="room-symbol" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="7" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M17 4a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 5"/></svg>CRIAR SALA</button>
+            <form id="mp-join-form" class="mp-join-form">
+              <label for="mp-code">ou entre com código</label>
+              <div class="mp-code-entry"><input id="mp-code" name="code" maxlength="6" minlength="6" placeholder="CÓDIGO" autocomplete="off" autocapitalize="characters" spellcheck="false" required /><button class="mp-button" type="submit">ENTRAR</button></div>
+            </form>
+            <p id="mp-menu-error" class="mp-message" role="status"></p>
+          </aside>
+          <div class="arena-launch"><aside class="difficulty-panel" aria-label="Escolha a dificuldade"><h2>Escolha a dificuldade</h2><div class="difficulty-options"><button type="button" data-mode="easy" aria-pressed="false"><span>▰</span> FÁCIL</button><button type="button" data-mode="normal" aria-pressed="false"><span>▰▰</span> NORMAL</button><button type="button" data-mode="hard" aria-pressed="false"><span>▰▰▰</span> DIFÍCIL</button></div></aside>
+          <button class="arena-launch-button" type="submit" form="start-form"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="m12 7 27 17-27 17Z" fill="#fff3ba" stroke="#624215" stroke-width="3"/><path d="m18 18 10 6-10 6Z" fill="#a47724"/></svg><span>ENTRAR NA ARENA</span><kbd>ENTER</kbd></button></div>
+        </footer>
+      </section>
+      <section id="mp-room" class="mp-room hidden" aria-labelledby="mp-room-title">
+        <div class="mp-room-panel">
+          <header class="mp-room-header">
+            <div><h2 id="mp-room-title">SALA</h2><div class="mp-room-code-wrap"><strong id="mp-room-code">------</strong><button id="mp-copy" class="mp-icon-button" type="button" aria-label="Copiar código da sala" title="Copiar código"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button></div></div>
+            <button id="mp-leave" class="mp-button mp-quiet" type="button">SAIR DA SALA</button>
+          </header>
+          <div id="mp-players" class="mp-players" aria-label="Jogadores na sala"></div>
+          <div class="mp-settings">
+            <label for="mp-mode">Dificuldade<select id="mp-mode"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option></select></label>
+            <label for="mp-rounds">Rodadas<select id="mp-rounds"><option value="3">3 rodadas</option><option value="5" selected>5 rodadas</option><option value="7">7 rodadas</option></select></label>
+          </div>
+          <p id="mp-room-message" class="mp-message" role="status"></p>
+          <div class="mp-room-actions"><button id="mp-ready" class="mp-button" type="button" aria-pressed="false">ESTOU PRONTO</button><button id="mp-start" class="mp-button mp-primary" type="button">INICIAR PARTIDA</button></div>
+        </div>
+      </section>
+      <section id="mp-hud" class="mp-hud hidden" aria-label="Partida multiplayer">
+        <div class="mp-match-heading"><span id="mp-round-label">RODADA 1 / 5</span><span id="mp-status" role="status"></span></div>
+        <div id="mp-scoreboard" class="mp-scoreboard" aria-label="Placar"></div>
+        <button id="mp-exit" class="mp-button mp-quiet" type="button">SAIR</button>
+      </section>
+      <section id="mp-results" class="mp-results hidden" aria-labelledby="mp-result-title">
+        <div class="mp-result-panel">
+          <h2 id="mp-result-title">FIM DA RODADA</h2>
+          <div id="mp-result-list" class="mp-result-list" aria-label="Classificação"></div>
+          <p id="mp-result-message" class="mp-message" role="status"></p>
+          <div class="mp-result-actions"><button id="mp-next" class="mp-button mp-primary" type="button">PRÓXIMA RODADA</button><button id="mp-lobby" class="mp-button" type="button">VOLTAR À SALA</button><button id="mp-result-leave" class="mp-button mp-quiet" type="button">SAIR DA SALA</button></div>
+        </div>
+      </section>
+      <section id="gameover" class="modal hidden"><p>PROTOCOLO INTERROMPIDO</p><h2>UNIDADE DESTRUÍDA</h2><div class="results"><span>PONTOS <b id="final-score">0</b></span><span>TEMPO <b id="final-time">00:00</b></span><span>XP <b id="final-xp">0</b></span><span>CRISTAIS <b id="final-crystals">0</b></span></div><div class="result-actions">
+        <button id="retry" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 7M5 3v5h5"/></svg><span>JOGAR NOVAMENTE</span><kbd>ENTER</kbd></button>
+        <button id="back-menu" class="back-menu" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg><span>TROCAR UNIDADE</span><span class="action-arrow" aria-hidden="true">→</span></button>
+      </div></section>
     </section>
   </main>
-  <script src="game.js"></script>
+  <dialog id="settings-dialog" aria-labelledby="settings-title"><header><h2 id="settings-title">CONFIGURAÇÕES</h2><button id="settings-close" type="button" aria-label="Fechar configurações">×</button></header><label><span>Efeitos sonoros</span><input id="settings-sound" type="checkbox" /></label><div class="sfx-volume"><label for="settings-volume">Volume dos efeitos <output id="settings-volume-value">100%</output></label><input id="settings-volume" type="range" min="0" max="100" step="1" value="100" /></div><label><span>Reduzir animações</span><input id="settings-motion" type="checkbox" /></label><button id="settings-bindings" class="settings-action" type="button">MUDAR TECLAS <span aria-hidden="true">→</span></button></dialog>
+  <dialog id="bindings-dialog" aria-labelledby="bindings-title"><header><h2 id="bindings-title">CONTROLES</h2><button id="bindings-close" type="button" aria-label="Fechar controles">×</button></header><div class="bindings-table"><div class="bindings-head"><span>Ação</span><span>Primária</span><span>Secundária</span></div><div id="bindings-list"></div></div><p id="bindings-message" role="status" aria-live="polite">Clique em uma tecla para mudar.</p><small>Esc cancela · Backspace remove a tecla</small><button id="bindings-reset" class="settings-action" type="button">RESTAURAR PADRÃO</button></dialog>
+  <dialog id="skin-shop" aria-labelledby="shop-title">
+    <header class="shop-header"><button id="inventory-back" type="button" aria-label="Voltar ao menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><div><span class="shop-eyebrow">HANGAR</span><h2 id="shop-title">Sua próxima unidade.</h2></div><div class="shop-wallet"><i class="crystal-icon" aria-hidden="true"></i><b id="shop-coins">0</b></div><button id="close-shop" type="button" aria-label="Fechar loja">×</button></header>
+    <div class="shop-layout"><section class="shop-catalog" aria-label="Skins disponíveis"><nav class="shop-filters" aria-label="Filtrar skins"><button type="button" data-shop-filter="all" aria-pressed="true">TODAS</button><button type="button" data-shop-filter="150" aria-pressed="false">150</button><button type="button" data-shop-filter="450" aria-pressed="false">450</button><button type="button" data-shop-filter="1000" aria-pressed="false">1.000</button><button type="button" data-shop-filter="owned" aria-pressed="false">MINHAS</button></nav><div id="shop-grid" class="shop-grid"></div></section>
+    <aside class="shop-detail"><div class="inventory-stage"><button id="inventory-previous" class="inventory-arrow" type="button" aria-label="Skin anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button><div class="inventory-art"><canvas id="shop-preview" width="640" height="600" aria-label="Prévia animada da skin"></canvas><div class="inventory-lock" role="img" aria-label="Skin bloqueada"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M19 28V17a13 13 0 0 1 26 0v11" fill="none" stroke="#d8edf2" stroke-width="6"/><path d="m12 26 7-5h26l7 5v27l-7 6H19l-7-6Z" fill="#1b3546" stroke="#a6dce5" stroke-width="2"/><path d="M17 29h30v21l-5 4H22l-5-4Z" fill="#35586a"/><circle cx="32" cy="37" r="5" fill="#b9f3f5"/><path d="M30 40h4v8h-4Z" fill="#b9f3f5"/></svg></div></div><button id="inventory-next" class="inventory-arrow" type="button" aria-label="Próxima skin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button></div><h3 id="shop-name"></h3><p id="shop-description"></p><span id="shop-tier" class="shop-tier"></span><button id="shop-buy" type="button"></button><p id="shop-message" role="status" aria-live="polite"></p><small>Mesmo poder. Seu estilo.</small></aside></div>
+  </dialog>
+  <script src="i18n.js"></script>
+  <script src="skin-catalog.js"></script>
+  <script src="skin-art.js"></script>
+  <script src="combat-balance.js?v=20260929-multiplayer"></script>
+  <script src="game-audio.js?v=20260929-multiplayer"></script>
+  <script src="robot-motion.js?v=20260929-multiplayer"></script>
+  <script src="space-scene.js?v=20260929-multiplayer"></script>
+  <script src="enemy-weapon.js?v=20260929-multiplayer"></script>
+  <script src="crystals.js"></script>
+  <script src="records.js"></script>
+  <script src="controls.js"></script>
+  <script src="game.js?v=20260929-multiplayer"></script>
+  <script src="skin-shop.js"></script>
+  <script src="multiplayer.js?v=20260929-multiplayer"></script>
+  <script src="menu-ui.js"></script>
 </body>
 </html>
